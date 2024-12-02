@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import TaskModel from "../../models/task.model";
-// const UserModel = require("../../models/user.model");
+import UserModel from "../../models/user.model";
 
 // ----------------[]------------------- //
 // [GET] /tasks/
@@ -8,10 +8,10 @@ export const index = async (request: Request, response: Response) =>
 {
    const taskFind = {
       // ----- Get tasks belong to specific suer ----- //
-      // $or: [
-      //    { createdBy: request.accountUser.id },
-      //    { listParticipants: request.accountUser.id }
-      // ],
+      $or: [
+         { createdBy: request["accountUser"].id },
+         { listParticipants: request["accountUser"].id }
+      ],
       // ----- End get tasks belong to specific suer ----- //
       deleted: false
    };
@@ -189,52 +189,52 @@ export const createTask = async (request: Request, response: Response) =>
       //
       // ----- End make sure the data type is correct with the Model : Number, String,... ----- //
    
-      // request.body.createdBy = request.accountUser.id;
+      request.body.createdBy = request["accountUser"].id;
    
 
-      // // ----- Check if the user that FE sends is real (i.e. exists in the database) ----- // 
-      // for(const checkRealUserId of request.body.listParticipants) {
-      //    const realUser = await UserModel.findOne(
-      //       {
-      //          _id: checkRealUserId
-      //       }
-      //    );
+      // ----- Check if the user that FE sends is real (i.e. exists in the database) ----- // 
+      for(const checkRealUserId of request.body.listParticipants) {
+         const realUser = await UserModel.findOne(
+            {
+               _id: checkRealUserId
+            }
+         );
 
-      //    if(!realUser) {
-      //       response.json(
-      //          {
-      //             code: 400,
-      //             message: "Không tồn tại userID!"
-      //          }
-      //       );
-      //       return; // stop the program immediately
-      //    }
-      // }
-      // // ----- End check if the user that FE sends is real (i.e. exists in the database) ----- // 
+         if(!realUser) {
+            response.json(
+               {
+                  code: 400,
+                  message: "Không tồn tại userID!"
+               }
+            );
+            return; // stop the program immediately
+         }
+      }
+      // ----- End check if the user that FE sends is real (i.e. exists in the database) ----- // 
    
 
-      // // ----- Check if the parentId that FE sends is real (i.e. exists in the database) ----- //
-      // const parentTaskId = request.body.parentId || "";
+      // ----- Check if the parentId that FE sends is real (i.e. exists in the database) ----- //
+      const parentTaskId = request.body.parentId || "";
       
-      // if(parentTaskId)
-      // {
-      //    const realParentId = await TaskModel.findOne(
-      //       {
-      //          _id: request.body.parentId
-      //       }
-      //    );
+      if(parentTaskId)
+      {
+         const realParentId = await TaskModel.findOne(
+            {
+               _id: request.body.parentId
+            }
+         );
    
-      //    if(!realParentId) {
-      //       response.json(
-      //          {
-      //             code: 400,
-      //             message: "Không tồn tại parentID!"
-      //          }
-      //       );
-      //       return; // stop the program immediately
-      //    }
-      // }
-      // // ----- End check if the parentId that FE sends is real (i.e. exists in the database) ----- //
+         if(!realParentId) {
+            response.json(
+               {
+                  code: 400,
+                  message: "Không tồn tại parentID!"
+               }
+            );
+            return; // stop the program immediately
+         }
+      }
+      // ----- End check if the parentId that FE sends is real (i.e. exists in the database) ----- //
 
 
       const newTaskModel = new TaskModel(request.body);
@@ -265,7 +265,7 @@ export const editTask = async (request: Request, response: Response) =>
       const id: string = request.params.id;
       const dataForUpdate = request.body;
 
-      // request.body.updatedBy = request.accountUser.id;
+      request.body.updatedBy = request["accountUser"].id;
 
       await TaskModel.updateOne(
          {

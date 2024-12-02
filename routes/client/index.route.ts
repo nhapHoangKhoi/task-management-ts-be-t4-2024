@@ -2,13 +2,13 @@ import { Express } from "express";
 import { taskRoute } from "./task.route";
 import { userRoute } from "./user.route";
 
-// const authenMiddleware = require("../../middlewares/client/authen.middleware.js");
+import * as authenMiddleware from "../../middlewares/client/authen.middleware";
 
 export const routeClient = (app: Express) =>
 {
    app.use(
       "/tasks",
-      // authenMiddleware.checkAuthen,
+      authenMiddleware.checkAuthen,
       taskRoute
    );
 
