@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserModel from "../../models/task.model";
+import UserModel from "../../models/user.model";
 
 // const ForgotPasswordModel = require("../../models/forgot-password.model.js");
 
@@ -57,49 +57,49 @@ export const registerAccount = async (request: Request, response: Response) =>
 // ----------------End []------------------- //
 
 
-// // ----------------[]------------------- //
-// // [POST] /user/login
-// module.exports.loginAccount = async (request, response) =>
-// {
-//    const inputEmail = request.body.email;
-//    const inputPassword = request.body.password;
+// ----------------[]------------------- //
+// [POST] /user/login
+export const loginAccount = async (request: Request, response: Response) =>
+{
+   const inputEmail: string = request.body.email;
+   const inputPassword: string = request.body.password;
 
-//    const theAccount = await UserModel.findOne(
-//       {
-//          email: inputEmail,
-//          deleted: false
-//       }
-//    );
+   const theAccount = await UserModel.findOne(
+      {
+         email: inputEmail,
+         deleted: false
+      }
+   );
 
-//    if(!theAccount) {
-//       response.json(
-//          {
-//             code: 400,
-//             message: "Email không tồn tại!"
-//          }
-//       );
-//       return; // stop the program immediately
-//    }
+   if(!theAccount) {
+      response.json(
+         {
+            code: 400,
+            message: "Email không tồn tại!"
+         }
+      );
+      return; // stop the program immediately
+   }
 
-//    if(md5(inputPassword) != theAccount.password) {
-//       response.json(
-//          {
-//             code: 400,
-//             message: "Email hoặc mật khẩu không đúng!"
-//          }
-//       );
-//       return; // stop the program immediately
-//    }
+   if(md5(inputPassword) != theAccount.password) {
+      response.json(
+         {
+            code: 400,
+            message: "Email hoặc mật khẩu không đúng!"
+         }
+      );
+      return; // stop the program immediately
+   }
 
-//    response.json(
-//       {
-//          code: 200,
-//          message: "Đăng nhập thành công!",
-//          token: theAccount.token
-//       }
-//    );
-// }
-// // ----------------End []------------------- //
+   response.json(
+      {
+         code: 200,
+         message: "Đăng nhập thành công!",
+         token: theAccount.token
+      }
+   );
+}
+// ----------------End []------------------- //
 
 
 // // ----------------[]------------------- //

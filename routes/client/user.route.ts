@@ -5,7 +5,7 @@ import * as controller from "../../controllers/client/user.controller";
 // const authenMiddleware = require("../../middlewares/client/authen.middleware.js");
 
 router.post("/register", controller.registerAccount);
-// router.post("/login", controller.loginAccount);
+router.post("/login", controller.loginAccount);
 
 // router.post("/password/forgot", controller.forgotPassword);
 // router.post("/password/otp", controller.otpPassword);
